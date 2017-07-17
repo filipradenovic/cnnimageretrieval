@@ -9,15 +9,16 @@
 This code implements:
 
 1. Training (fine-tuning) CNN for image retrieval
-2. Testing CNN image retrieval on Oxford5k and Paris6k datasets
+1. Learning supervised whitening for CNN image representation given matching image pairs
+1. Testing CNN image retrieval on Oxford5k and Paris6k datasets
 
 ## Prerequisites
 
 In order to run this toolbox you will need:
 
 1. MATLAB (tested with MATLAB R2017a on Debian 8.1)
-2. MatConvNet MATLAB toolbox version 1.0-beta24 [[matconvnet-1.0-beta24.tar.gz](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta24.tar.gz)]
-3. All the rest (data + networks) is automatically downloaded with our scripts
+1. MatConvNet MATLAB toolbox version 1.0-beta24 [[matconvnet-1.0-beta24.tar.gz](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta24.tar.gz)]
+1. All the rest (data + networks) is automatically downloaded with our scripts
 
 ## Execution
 
