@@ -53,6 +53,15 @@ function download_train(data_dir)
         fprintf('>> Extracted, deleting %s...\n', dst_file);
         system(sprintf('rm %s', dst_file));
     end
+    dl_files = {'retrieval-SfM-30k-imagenames-clusterids.mat', 'retrieval-SfM-120k-imagenames-clusterids.mat'};
+    for i = 1:numel(dl_files)
+        src_file = fullfile(src_dir, dl_files{i});
+        dst_file = fullfile(dst_dir, dl_files{i});
+        if ~exist(dst_file, 'file')
+            fprintf('>> Dataset image split %s does not exist. Downloading...\n', dl_files{i});
+            system(sprintf('wget %s -O %s', src_file, dst_file)); 
+        end
+    end
 
     % Download folder networks/imagenet/
     src_dir = fullfile('http://www.vlfeat.org/matconvnet/', 'models');
