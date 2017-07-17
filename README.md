@@ -1,6 +1,10 @@
 # CNNImageRetrieval: Training and evaluating CNNs for Image Retrieval
 
-**CNNImageRetrieval** is a MATLAB toolbox that implements the training and testing of the approach described in our ECCV 2016 paper "CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples" [[arXiv](http://arxiv.org/abs/1604.02426)]
+**CNNImageRetrieval** is a MATLAB toolbox that implements the training and testing of the approach described in our ECCV 2016 paper:
+
+> *CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples*, 
+> Radenović F., Tolias G., Chum O., 
+> ECCV 2016 [[arXiv](http://arxiv.org/abs/1604.02426)]
 
 <img src="http://cmp.felk.cvut.cz/cnnimageretrieval/cnnimageretrieval_teaser.png" width=\textwidth/>
 
@@ -9,7 +13,7 @@
 This code implements:
 
 1. Training (fine-tuning) CNN for image retrieval
-1. Learning supervised whitening for CNN image representation using matching image pairs
+1. Learning supervised whitening for CNN image representations
 1. Testing CNN image retrieval on Oxford5k and Paris6k datasets
 
 ## Prerequisites
@@ -17,7 +21,7 @@ This code implements:
 In order to run this toolbox you will need:
 
 1. MATLAB (tested with MATLAB R2017a on Debian 8.1)
-1. MatConvNet MATLAB toolbox version 1.0-beta24 [[matconvnet-1.0-beta24.tar.gz](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta24.tar.gz)]
+1. MatConvNet MATLAB toolbox version [1.0-beta24](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta24.tar.gz)
 1. All the rest (data + networks) is automatically downloaded with our scripts
 
 ## Execution
@@ -33,9 +37,8 @@ Run the following script in MATLAB:
 
 ## Citation
 
-If you use this work please cite our ECCV 2016 publication "CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples" [[arXiv](http://arxiv.org/abs/1604.02426)]
+If you use this work please cite our ECCV 2016 publication:
 
-Bibtex:
 ```
 @inproceedings{RTC16,
  title = {{CNN} Image Retrieval Learns from {BoW}: Unsupervised Fine-Tuning with Hard Examples},
@@ -43,3 +46,4 @@ Bibtex:
  booktitle = {ECCV},
  year = {2016}
 }
+```
