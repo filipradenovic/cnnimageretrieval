@@ -58,9 +58,15 @@ if use_gpu,	gpuDevice(use_gpu); net.move('gpu'); end
 
 % Load training data filenames and pairs for whitening
 train_whiten = load(train_whiten_file);
-cids = [train_whiten.train.cids train_whiten.val.cids]; 
-qidxs = [train_whiten.train.qidxs train_whiten.val.qidxs+numel(train_whiten.train.cids)]; % query indexes 
-pidxs = [train_whiten.train.pidxs train_whiten.val.pidxs+numel(train_whiten.train.cids)]; % positive indexes
+if isfield(train_whiten, 'train') && isfield(train_whiten, 'val')
+	cids  = [train_whiten.train.cids train_whiten.val.cids]; 
+	qidxs = [train_whiten.train.qidxs train_whiten.val.qidxs+numel(train_whiten.train.cids)]; % query indexes 
+	pidxs = [train_whiten.train.pidxs train_whiten.val.pidxs+numel(train_whiten.train.cids)]; % positive indexes
+else
+	cids  = train_whiten.cids; 
+	qidxs = train_whiten.qidxs; % query indexes 
+	pidxs = train_whiten.pidxs; % positive indexes
+end
 
 % learn whitening
 fprintf('>> whitening: Extracting CNN descriptors for training images...\n');
