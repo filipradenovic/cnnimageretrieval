@@ -9,7 +9,7 @@
 This code implements:
 
 1. Training (fine-tuning) CNN for image retrieval
-1. Learning supervised whitening for CNN image representation given matching image pairs
+1. Learning supervised whitening for CNN image representation using matching image pairs
 1. Testing CNN image retrieval on Oxford5k and Paris6k datasets
 
 ## Prerequisites
