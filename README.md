@@ -8,7 +8,7 @@
 
 This code implements:
 
-1. Training (fine-tuning) CNN for the image retrieval task
+1. Training (fine-tuning) CNN for image retrieval
 2. Testing CNN image retrieval on Oxford5k and Paris6k datasets
 
 ## Prerequisites
