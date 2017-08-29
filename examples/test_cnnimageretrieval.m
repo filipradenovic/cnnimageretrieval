@@ -95,7 +95,7 @@ for d = 1:numel(test_datasets)
 	fprintf('>> %s: Extracting CNN descriptors for query images...\n', test_datasets{d}); 
 	progressbar(0); qvecs = [];
 	for i = 1:cfg.nq
-		qvecs{i} = descfun(crop_qim(imread(cfg.qim_fname(cfg, cfg.qidx(i))), cfg.gnd(i).bbx, test_imdim), net);
+		qvecs{i} = descfun(crop_qim(imread(cfg.qim_fname(cfg, i)), cfg.gnd(i).bbx, test_imdim), net);
 		progressbar(i/cfg.nq);
 	end
 	qvecs = cell2mat(qvecs);

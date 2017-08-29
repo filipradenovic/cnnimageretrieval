@@ -39,7 +39,7 @@ function cfg = config_oxford (cfg)
   cfg.gnd_fname = [cfg.dir_data 'gnd_oxford5k.mat'];
   load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
   cfg.imlist = imlist;
-  cfg.qimlist = imlist;  
+  cfg.qimlist = {imlist{qidx}};  
   cfg.gnd = gnd;
   cfg.qidx = qidx;
   cfg.n = length (cfg.imlist);   % number of database images
@@ -53,7 +53,7 @@ function cfg = config_paris (cfg)
   load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
   % Specific variables to handle paris's groundtruth
   cfg.imlist = imlist;
-  cfg.qimlist = imlist;
+  cfg.qimlist = {imlist{qidx}};
   cfg.gnd = gnd;
   cfg.qidx = qidx;
   cfg.n = length (cfg.imlist);   % number of database images
