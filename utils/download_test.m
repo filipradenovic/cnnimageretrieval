@@ -3,9 +3,10 @@ function download_test(data_dir)
 %
 %   download_test(DATA_ROOT) checks if the data and networks necessary for running the testing script exist.
 %   If not it downloads it in the folder structure:
-%     DATA_ROOT/test/oxford5k/              : folder with oxford5k images
-%     DATA_ROOT/test/paris6k/               : folder with paris6k images
-%     DATA_ROOT/networks/retrieval-SfM-30k/ : CNN models fine-tuned for image retrieval using retrieval-SfM-30k data
+%     DATA_ROOT/test/oxford5k/               : folder with oxford5k images
+%     DATA_ROOT/test/paris6k/                : folder with paris6k images
+%     DATA_ROOT/networks/retrieval-SfM-30k/  : CNN models fine-tuned for image retrieval using retrieval-SfM-30k data
+%     DATA_ROOT/networks/retrieval-SfM-120k/ : CNN models fine-tuned for image retrieval using retrieval-SfM-120k data
 
     % Create data folder if it does not exist
     if ~exist(data_dir, 'dir')
@@ -70,7 +71,25 @@ function download_test(data_dir)
     % Download folder networks/retrieval-SfM-30k/
     src_dir = fullfile('http://cmp.felk.cvut.cz/cnnimageretrieval/data', 'networks', 'retrieval-SfM-30k');
     dst_dir = fullfile(data_dir, 'networks', 'retrieval-SfM-30k');
-    dl_files = {'retrievalSfM30k-siamac-alex.mat', 'retrievalSfM30k-siamac-vgg.mat'};
+    dl_files = {'retrievalSfM30k-siamac-alex.mat', 'retrievalSfM30k-siamac-vgg.mat', 'retrievalSfM30k-gem-alex.mat'};
+    if ~exist(dst_dir, 'dir')
+        fprintf('>> Fine-tuned networks directory does not exist. Creating: %s\n', dst_dir);
+        mkdir(dst_dir);
+        fprintf('>> Downloading fine-tuned network files from http://cmp.felk.cvut.cz/cnnimageretrieval\n');
+    end
+    for i = 1:numel(dl_files)
+        src_file = fullfile(src_dir, dl_files{i});
+        dst_file = fullfile(dst_dir, dl_files{i});
+        if ~exist(dst_file, 'file')
+            fprintf('>> Network %s does not exist. Downloading...\n', dl_files{i});
+            system(sprintf('wget %s -O %s', src_file, dst_file)); 
+        end
+    end
+
+    % Download folder networks/retrieval-SfM-120k/
+    src_dir = fullfile('http://cmp.felk.cvut.cz/cnnimageretrieval/data', 'networks', 'retrieval-SfM-120k');
+    dst_dir = fullfile(data_dir, 'networks', 'retrieval-SfM-120k');
+    dl_files = {'retrievalSfM120k-gem-vgg.mat', 'retrievalSfM120k-gem-resnet101.mat'};
     if ~exist(dst_dir, 'dir')
         fprintf('>> Fine-tuned networks directory does not exist. Creating: %s\n', dst_dir);
         mkdir(dst_dir);

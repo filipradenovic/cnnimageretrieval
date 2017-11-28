@@ -6,6 +6,8 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 %   METHOD is a string:
 %     'mac'   - global max pooling layer
 %     'spoc'  - global average pooling layer
+%     'gem'   - global generalized mean pooling layer with one p for all conv filters
+%     'gemmp' - global generalized mean pooling layer with multiple p for each conv filter
 %
 %   OBJECTIVE & ERROR are a cell array with 2 values:
 %     {'contrastiveloss', M} - contrastive loss with margin M
@@ -28,7 +30,7 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 
 	l = 0;
 
-	% Pooling layer
+	% Global pooling layer
 	l = l + 1;
 	inputs = {sprintf('xx%d',l-1)};
 	outputs = {'pooldescriptor'};
@@ -38,10 +40,25 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 		block = MAC();
 	elseif strfind(method, 'spoc')
 		block = SPOC();
+	elseif strfind(method, 'gem')
+		block = GeM();
+		if strfind(method, 'gemmp'), sz = [1 1 D 1]; else, sz = [1 1 1 1]; end
+		params(1).name = 'gem';
+		params(1).value = ones(sz, 'single') * 3;
+		params(1).learningRate = 10;
+		params(1).weightDecay  = 0;
 	else
 		error(sprintf('Unknown method %s\n', method));
 	end
 	net.addLayer(name, block, inputs, outputs, {params.name});
+	if numel(strfind(method, 'gem'))
+		findex = net.getParamIndex(params(1).name) ;
+		if ~isempty(params(1).value)
+			net.params(findex).value = params(1).value ;
+			net.params(findex).learningRate = params(1).learningRate;
+			net.params(findex).weightDecay = params(1).weightDecay;
+		end
+	end
 	
 	% L2 normalization layer
 	inputs = {'pooldescriptor'};
@@ -51,7 +68,7 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 	block = L2N();
 	net.addLayer(name, block, inputs, outputs, {params.name});
 
-	% Objective layer
+    % Objective layer
 	inputs{1} = 'l2descriptor';
 	inputs{2} = 'label';
 	outputs = {'objective'};
@@ -67,7 +84,7 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 	end
 	net.addLayer(name, block, inputs, outputs, {params.name});
 
-	% Error layer
+    % Error layer
 	if exist('errortype') & numel(errortype)
 		inputs{1} = 'l2descriptor';		
 		inputs{2} = 'label';

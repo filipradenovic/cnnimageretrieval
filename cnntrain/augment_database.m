@@ -84,3 +84,14 @@ if opts.jitterFlip
 	fprintf('>>>> done in %s\n', htime(toc(t)));
 
 end
+
+if opts.jitterQueryBinarize
+	fprintf('>> Binarizing queries, after thresholding with random t from range [0 0.2]...\n'); t=tic;
+	qbidxs = randperm(numel(db.train.qidxs));
+	qbidxs = qbidxs(1 : floor(0.5*numel(db.train.qidxs)));
+	for qb = qbidxs
+	  a = 0; b = 0.2; thr = a + (b-a).*rand;
+	  db.train.data{db.train.qidxs(qb)} = (db.train.data{db.train.qidxs(qb)} > thr) * max(db.train.data{db.train.qidxs(qb)}(:));
+	end
+	fprintf('>>>> done in %s\n', htime(toc(t)));
+end

@@ -12,7 +12,7 @@ function x = whitenapply(x, m, P, dimensions)
 % Authors: F. Radenovic, G. Tolias, O. Chum. 2017. 
 
 if nargin < 4
-  dimensions = size(P,2);
+  dimensions = size(P,1);
 end
 
 x = P(1:dimensions,:) * bsxfun(@minus,x,m);

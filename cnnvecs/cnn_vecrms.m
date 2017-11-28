@@ -1,17 +1,21 @@
-function v = cnn_vecr(im, net, L)
-% CNN_VECR computes a regional D-dimensional CNN vector for an image.
+function v = cnn_vecrms(im, net, L, scales, aggregate)
+% CNN_VECRMS computes a multi-scale regional D-dimensional CNN vector for an image.
 %
-%   V = cnn_vecr(IM, NET, L)
+%   V = cnn_vecrms(IM, NET, L, SCALES, AGGREGATE)
 %   
-%   IM  : Input image, or input image path as a string
-%   NET : CNN network to evaluate on image IM
-%	  L   : Number of pyramid levels for regions extraction (Default: 3)
+%   IM        : Input image, or input image path as a string
+%   NET       : CNN network to evaluate on image IM
+%	  L         : Number of pyramid levels for regions extraction (DEFAULT: 3)
+%   SCALES    : Vector of scales to resize image prior to the descriptor computation (DEFAULT: [1])
+%   AGGREGATE : Aggregate over scales if 1, otherwise return one vector per image scale (DEFAULT: 1)
 %
-%   V   : Aggregated regional D-dimensional vector
+%   V         : Multi-scale output, D x 1 if AGGREGATE=1, D x numel(SCALES) if AGGREGATE=0
 %
 % Authors: F. Radenovic, G. Tolias, O. Chum. 2017. 
   
   if ~exist('L'), L = 3; end
+  if ~exist('scales'), scales = 1; end
+  if ~exist('aggregate'), aggregate = 1; end
   
   minsize = 67;
   net.mode = 'test';
@@ -32,32 +36,52 @@ function v = cnn_vecr(im, net, L)
   	im = imread(im);
   end
 
-  im = single(im) - mean(net.meta.normalization.averageImage(:));;
-  if size(im, 3) == 1
-	im = repmat(im, [1 1 3]);
-  end	
+  v = [];
+  for s = scales(:)'
+    im_ = imresize(im, s);
 
-  if min(size(im, 1), size(im, 2)) < minsize
-  	im = pad2minsize(im, minsize, 0);
+    im_ = single(im_) - mean(net.meta.normalization.averageImage(:));;
+    if size(im_, 3) == 1
+  	  im_ = repmat(im_, [1 1 3]);
+    end	
+  
+    if min(size(im_, 1), size(im_, 2)) < minsize
+    	im_ = pad2minsize(im_, minsize, 0);
+    end
+  
+    net.vars(net.getVarIndex(prepoolvarname)).precious = 1;
+    net.eval({'input', gpuarrayfun(reshape(im_, [size(im_), 1]))});
+    vt = gatherfun(squeeze(net.getVar(descvarname).value));
+    X = gatherfun(squeeze(net.getVar(prepoolvarname).value));
+    net.vars(net.getVarIndex(prepoolvarname)).precious = 0;
+  
+    if isa(net.layers(net.getLayerIndex(poollayername)).block, 'MAC')
+      p = inf;
+    elseif isa(net.layers(net.getLayerIndex(poollayername)).block, 'SPOC')
+      p = 1;
+    elseif isa(net.layers(net.getLayerIndex(poollayername)).block, 'GeM')
+      p = gatherfun(net.params(net.layers(net.getLayerIndex(poollayername)).paramIndexes).value);
+    else
+      disp('UNKNOWN REGIONAL POOLING! INVOKING KEYBOARD!')
+      keyboard;
+    end
+    vt = [vt, vecpostproc(rvec_from_act(X, L, p))];
+    vt = sum(vt, 2);
+    vt = vecpostproc(vt);
+    v = [v, vt];
   end
 
-  net.vars(net.getVarIndex(prepoolvarname)).precious = 1;
-  net.eval({'input', gpuarrayfun(reshape(im, [size(im), 1]))});
-  v = gatherfun(squeeze(net.getVar(descvarname).value));
-  X = gatherfun(squeeze(net.getVar(prepoolvarname).value));
-  net.vars(net.getVarIndex(prepoolvarname)).precious = 0;
-
-  if isa(net.layers(net.getLayerIndex(poollayername)).block, 'MAC');
-    p = inf;
-  elseif isa(net.layers(net.getLayerIndex(poollayername)).block, 'SPOC');
-    p = 1;
-  else
-    p = net.params(net.layers(net.getLayerIndex(poollayername)).paramIndexes).value;
-    % p = reshape(p, [size(p,3), 1]);
+  if aggregate
+    if isa(net.layers(net.getLayerIndex(poollayername)).block, 'GeM')
+      p = gatherfun(net.params(net.layers(net.getLayerIndex(poollayername)).paramIndexes).value);
+      p = reshape(p, [size(p,3), 1]);
+    else 
+      p = 1;
+    end
+    v = bsxfun(@power, v, p);
+    v = (sum(v, 2) / size(v, 2)).^(1./p);
+    v = vecpostproc(v);
   end
-  v = [v, vecpostproc(rvec_from_act(X, L, p))];
-  v = sum(v, 2);
-  v = vecpostproc(v);
 
 % ------------------------------------------------------------------------------------------------
 function vecs = rvec_from_act(X, L, p)

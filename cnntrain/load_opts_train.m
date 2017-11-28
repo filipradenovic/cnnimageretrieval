@@ -14,7 +14,7 @@ function opts = load_opts_train(varargin)
 	%% Network architecture and initialization options
 	opts.init.model = 'ALEX'; % initialization model (ALEX | VGG | RESNET50 | RESNET101 | RESNET152)
 	opts.init.modelDir = fullfile(get_root_cnnimageretrieval(), 'data', 'networks', 'imagenet'); % Directory with pretrained models
-	opts.init.method = 'mac'; % method (mac | spoc)
+	opts.init.method = 'mac'; % method (mac | spoc | gem | gemmp)
 	opts.init.objectiveType = {'contrastiveloss', 0.7}; % loss function (contrastiveloss | tripletloss)
 	opts.init.errorType =  {'batchmap'}; %  error function (for validation)
 	opts.init.averageImageScale = 1; % [0, 1] scaling for the average image
@@ -59,6 +59,7 @@ function opts = load_opts_train(varargin)
 	opts.train.augment.jitterBrightness = 0;
 	opts.train.augment.jitterContrast = 0;
 	opts.train.augment.jitterSaturation = 0;
+	opts.train.augment.jitterQueryBinarize = false; % true: random binarization of query edgemap (used for sketches)
 
 
 	%--------------------------------------------------------------------------------------------------

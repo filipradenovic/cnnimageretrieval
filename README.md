@@ -1,6 +1,10 @@
 # CNNImageRetrieval: Training and evaluating CNNs for Image Retrieval
 
-**CNNImageRetrieval** is a MATLAB toolbox that implements the training and testing of the approach described in our ECCV 2016 paper:
+**CNNImageRetrieval** is a MATLAB toolbox that implements the training and testing of the approach described in our papers:
+
+> *Fine-tuning CNN Image Retrieval with No Human Annotation*, 
+> Radenović F., Tolias G., Chum O., 
+> arXiv 2017 [[arXiv](https://arxiv.org/abs/1711.02512)]
 
 > *CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples*, 
 > Radenović F., Tolias G., Chum O., 
@@ -21,7 +25,7 @@ This code implements:
 In order to run this toolbox you will need:
 
 1. MATLAB (tested with MATLAB R2017a on Debian 8.1)
-1. MatConvNet MATLAB toolbox version [1.0-beta24](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta24.tar.gz)
+1. MatConvNet MATLAB toolbox version [1.0-beta25](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta25.tar.gz)
 1. All the rest (data + networks) is automatically downloaded with our scripts
 
 ## Execution
@@ -37,8 +41,15 @@ Run the following script in MATLAB:
 
 ## Citation
 
-If you use this work please cite our ECCV 2016 publication:
-
+Related publications:
+```
+@inproceedings{Radenovic-arXiv17a,
+ title={Fine-tuning {CNN} Image Retrieval with No Human Annotation},
+ author={Radenovi{\'c}, Filip and Tolias, Giorgos and Chum, Ond{\v{r}}ej},
+ booktitle = {arXiv:1711.02512},
+ year={2017}
+}
+```
 ```
 @inproceedings{RTC16,
  title = {{CNN} Image Retrieval Learns from {BoW}: Unsupervised Fine-Tuning with Hard Examples},

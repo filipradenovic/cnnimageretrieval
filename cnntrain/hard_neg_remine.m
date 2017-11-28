@@ -16,7 +16,7 @@ function nidxs = hard_neg_remine(net, ims, clusterids, qidxs, nnum, nbatch, mmap
 % Authors: F. Radenovic, G. Tolias, O. Chum. 2017.
 
 %% Net mode for hard negative mining: 'normal' or 'test'
-net_mode = 'normal';
+net_mode = 'test';
 %% Layer name to take descriptor from
 descvarname = 'l2descriptor';
 %% Mean pixel value
@@ -73,6 +73,7 @@ qidxs = qidxs(istart:iend);
 
 %% Remine negatives for this lab
 fprintf('>> Remine hard negatives...\n');
+nskip = 0;
 nidxs = [];
 pgs_cnt = 0;
 progressbar(0);
@@ -88,7 +89,7 @@ for q = qidxs
 	[~, uidx] = unique(clusterids(neg), 'stable');
 	neg = neg(uidx);
 	% take nnum hardest
-	nidxs = [nidxs neg(1:nnum)']; 
+	nidxs = [nidxs neg(1+nskip:nnum+nskip)']; 
 	% progress count and print, doesnt work with multiple gpus
 	pgs_cnt = pgs_cnt + 1;
 	progressbar(pgs_cnt/numel(qidxs)); 

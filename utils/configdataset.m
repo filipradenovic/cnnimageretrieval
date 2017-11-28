@@ -8,19 +8,19 @@ function cfg  = configdataset (dataset, dir_main)
 %
 %   CFG      : structure with dataset configuration
 
-if ~exist('dir_main')
-  dir_main = '/mnt/lascar/toliageo/datasets/';
-end
-
 switch lower(dataset)
   case 'oxford5k'
-		params.ext = '.jpg';
-  	params.dir_data= [dir_main 'oxford5k/'];
-		cfg = config_oxford (params);
+    params.ext = '.jpg';
+    params.qext = '.jpg';
+    params.dir_data= [dir_main 'oxford5k/'];
+    cfg = config_oxford (params);
+    
   case 'paris6k'
-  	params.ext = '.jpg';
-   	params.dir_data= [dir_main 'paris6k/'];
+    params.ext = '.jpg';
+    params.qext = '.jpg';
+    params.dir_data= [dir_main 'paris6k/'];
     cfg = config_paris (params);
+    
   otherwise, error ('Unkown dataset %s\n', dataset);
 end
 
@@ -53,7 +53,7 @@ function cfg = config_paris (cfg)
   load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
   % Specific variables to handle paris's groundtruth
   cfg.imlist = imlist;
-  cfg.qimlist = {imlist{qidx}};
+  cfg.qimlist = {imlist{qidx}};  
   cfg.gnd = gnd;
   cfg.qidx = qidx;
   cfg.n = length (cfg.imlist);   % number of database images
@@ -62,9 +62,19 @@ function cfg = config_paris (cfg)
 %----------------------------------------------------
 function fname = config_imname (cfg, i)
 %----------------------------------------------------
-  fname = sprintf ('%s/jpg/%s.jpg', cfg.dir_data, cfg.imlist{i});
+  [~, ~, ext] = fileparts(cfg.imlist{i});
+  if isempty(ext)
+    fname = sprintf ('%s/jpg/%s%s', cfg.dir_data, cfg.imlist{i}, cfg.ext);
+  else
+    fname = sprintf ('%s/jpg/%s', cfg.dir_data, cfg.imlist{i});
+  end
 
 %----------------------------------------------------
 function fname = config_qimname (cfg, i)
-  %----------------------------------------------------
-  fname = sprintf ('%s/jpg/%s.jpg', cfg.dir_data, cfg.qimlist{i});
+%----------------------------------------------------
+  [~, ~, ext] = fileparts(cfg.qimlist{i});
+  if isempty(ext)
+    fname = sprintf ('%s/jpg/%s%s', cfg.dir_data, cfg.qimlist{i}, cfg.qext);
+  else
+    fname = sprintf ('%s/jpg/%s', cfg.dir_data, cfg.qimlist{i});
+  end
