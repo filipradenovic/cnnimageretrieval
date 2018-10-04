@@ -20,6 +20,18 @@ switch lower(dataset)
     params.qext = '.jpg';
     params.dir_data= [dir_main 'paris6k/'];
     cfg = config_paris (params);
+
+  case 'roxford5k'
+    params.ext = '.jpg';
+    params.qext = '.jpg';
+    params.dir_data = [dir_main 'roxford5k/'];
+    cfg = config_roxford (params);
+
+  case 'rparis6k'
+    params.ext = '.jpg';
+    params.qext = '.jpg';    
+    params.dir_data = [dir_main 'rparis6k/'];
+    cfg = config_rparis (params);
     
   otherwise, error ('Unkown dataset %s\n', dataset);
 end
@@ -58,6 +70,30 @@ function cfg = config_paris (cfg)
   cfg.qidx = qidx;
   cfg.n = length (cfg.imlist);   % number of database images
   cfg.nq = length (cfg.qidx);    % number of query images
+
+%----------------------------------------------------
+function cfg = config_roxford (cfg)
+  % Load groundtruth
+%----------------------------------------------------
+  cfg.gnd_fname = [cfg.dir_data 'gnd_roxford5k.mat'];
+  load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
+  cfg.imlist = imlist;
+  cfg.qimlist = qimlist;  
+  cfg.gnd = gnd;
+  cfg.n = length (cfg.imlist);   % number of database images
+  cfg.nq = length (cfg.qimlist);    % number of query images
+
+%----------------------------------------------------
+function cfg = config_rparis (cfg)
+  % Load groundtruth
+%----------------------------------------------------
+  cfg.gnd_fname = [cfg.dir_data 'gnd_rparis6k.mat'];
+  load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
+  cfg.imlist = imlist;
+  cfg.qimlist = qimlist;  
+  cfg.gnd = gnd;
+  cfg.n = length (cfg.imlist);   % number of database images
+  cfg.nq = length (cfg.qimlist);    % number of query images
 
 %----------------------------------------------------
 function fname = config_imname (cfg, i)

@@ -1,5 +1,5 @@
 % TRAIN_CNNIMAGERETRIEVAL Code to train the methods presented in the papers:
-% F. Radenovic, G. Tolias, O. Chum, Fine-tuning CNN Image Retrieval with No Human Annotation, arXiv 2017
+% F. Radenovic, G. Tolias, O. Chum, Fine-tuning CNN Image Retrieval with No Human Annotation, TPAMI 2018
 % F. Radenovic, G. Tolias, O. Chum, CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples, ECCV 2016
 %
 % Note: The method has been re-coded since our ECCV 2016 paper and minor differences in performance might appear.
@@ -20,7 +20,7 @@ download_train(data_root);
 
 
 %-------------------------------------------------------------------------------
-% Reproduce training from arXiv17 paper: Fine-tuning CNN Image Retrieval ...
+% Reproduce training from TPAMI18 paper: Fine-tuning CNN Image Retrieval ...
 %-------------------------------------------------------------------------------
 
 %% RESNET101 -------------------------------------------------------------------
@@ -35,7 +35,7 @@ opts.init.errorType = {'batchmap'};
 
 % Set train parameters
 % We provide 2 pools of training images comprising 30k and 120k images
-% The latter is used in our arXiv17 paper
+% The latter is used in our TPAMI18 paper
 opts.train.dbPath = fullfile(data_root, 'train', 'dbs', 'retrieval-SfM-120k.mat');
 opts.train.batchSize = 5;
 opts.train.numEpochs = 30;
@@ -77,7 +77,7 @@ opts.init.errorType = {'batchmap'};
 
 % Set train parameters
 % We provide 2 pools of training images comprising 30k and 120k images
-% The latter is used in our arXiv17 paper
+% The latter is used in our TPAMI18 paper
 opts.train.dbPath = fullfile(data_root, 'train', 'dbs', 'retrieval-SfM-120k.mat');
 opts.train.batchSize = 5;
 opts.train.numEpochs = 30;

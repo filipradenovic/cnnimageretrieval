@@ -1,5 +1,5 @@
 % TEST_CNNIMAGERETRIEVAL  Code to evaluate (not train) the methods presented in the papers:
-% F. Radenovic, G. Tolias, O. Chum, Fine-tuning CNN Image Retrieval with No Human Annotation, arXiv 2017
+% F. Radenovic, G. Tolias, O. Chum, Fine-tuning CNN Image Retrieval with No Human Annotation, TPAMI 2018
 % F. Radenovic, G. Tolias, O. Chum, CNN Image Retrieval Learns from BoW: Unsupervised Fine-Tuning with Hard Examples, ECCV 2016
 %
 % Authors: F. Radenovic, G. Tolias, O. Chum. 2017. 
@@ -18,17 +18,17 @@ download_train(data_root);
 download_test(data_root); 
 
 % Set test options
-test_datasets = {'oxford5k', 'paris6k'};  % list of datasets to evaluate on
+test_datasets = {'oxford5k', 'paris6k', 'roxford5k', 'rparis6k'};  % list of datasets to evaluate on
 test_imdim = 1024;  % choose test image dimensionality
 use_ms = 1; % use multi-scale representation, otherwise use single-scale
 use_rvec = 0;  % use regional representation (R-MAC, R-GeM), otherwise use global (MAC, GeM)
-use_gpu = [1];  % use GPUs (array of GPUIDs), if empty use CPU
+use_gpu = [1,1,1,2,2,2,3,3,3,6,6,6,7,7,7,8,8,8];  % use GPUs (array of GPUIDs), if empty use CPU
 
 % Choose ECCV16 fine-tuned CNN network
 % network_file = fullfile(data_root, 'networks', 'retrieval-SfM-30k', 'retrievalSfM30k-siamac-alex.mat');
 % network_file = fullfile(data_root, 'networks', 'retrieval-SfM-30k', 'retrievalSfM30k-siamac-vgg.mat');
 
-% Choose arXiv17 fine-tuned CNN network
+% Choose TPAMI18 fine-tuned CNN network
 % network_file = fullfile(data_root, 'networks', 'retrieval-SfM-30k', 'retrievalSfM30k-gem-alex.mat');
 % network_file = fullfile(data_root, 'networks', 'retrieval-SfM-120k', 'retrievalSfM120k-gem-vgg.mat');
 network_file = fullfile(data_root, 'networks', 'retrieval-SfM-120k', 'retrievalSfM120k-gem-resnet101.mat');
@@ -177,14 +177,32 @@ for d = 1:numel(test_datasets)
 	qvecsLw = whitenapply(qvecs, Lw.m, Lw.P); % apply whitening on query descriptors
 
 	fprintf('>> %s: Retrieval...\n', test_datasets{d});
-	% raw descriptors
-	sim = vecs'*qvecs;
-	[sim, ranks] = sort(sim, 'descend');
-	map = compute_map (ranks, cfg.gnd);	
-	fprintf('>> %s: mAP = %.4f, without whiten\n', test_datasets{d}, map);
-	% with learned whitening
-	sim = vecsLw'*qvecsLw;
-	[sim, ranks] = sort(sim, 'descend');
-	map = compute_map (ranks, cfg.gnd);	
-	fprintf('>> %s: mAP = %.4f, with whiten\n', test_datasets{d}, map);
+	if strcmp(test_datasets{d}, 'oxford5k') || strcmp(test_datasets{d}, 'paris6k') 
+		% % raw descriptors
+		% sim = vecs'*qvecs;
+		% [sim, ranks] = sort(sim, 'descend');
+		% map = compute_map (ranks, cfg.gnd);	
+		% fprintf('>> %s: mAP = %.4f, without whiten\n', test_datasets{d}, map);
+		% with learned whitening
+		sim = vecsLw'*qvecsLw;
+		[sim, ranks] = sort(sim, 'descend');
+		map = compute_map (ranks, cfg.gnd);	
+		fprintf('>> %s: mAP = %.4f\n', test_datasets{d}, map);
+	elseif strcmp(test_datasets{d}, 'roxford5k') || strcmp(test_datasets{d}, 'rparis6k') 
+		sim = vecsLw'*qvecsLw;
+		[sim, ranks] = sort(sim, 'descend');
+		% evaluate ranks
+		ks = [1, 5, 10];
+		% search for easy (E setup)
+		for i = 1:numel(cfg.gnd), gnd(i).ok = [cfg.gnd(i).easy]; gnd(i).junk = [cfg.gnd(i).junk, cfg.gnd(i).hard]; end
+		[mapE, apsE, mprE, prsE] = compute_map (ranks, gnd, ks);
+		% search for easy & hard (M setup)
+		for i = 1:numel(cfg.gnd), gnd(i).ok = [cfg.gnd(i).easy, cfg.gnd(i).hard]; gnd(i).junk = cfg.gnd(i).junk; end
+		[mapM, apsM, mprM, prsM] = compute_map (ranks, gnd, ks);
+		% search for hard (H setup)
+		for i = 1:numel(cfg.gnd), gnd(i).ok = [cfg.gnd(i).hard]; gnd(i).junk = [cfg.gnd(i).junk, cfg.gnd(i).easy]; end
+		[mapH, apsH, mprH, prsH] = compute_map (ranks, gnd, ks);
+		fprintf('>> %s: mAP E: %.2f, M: %.2f, H: %.2f\n', test_datasets{d}, 100*mapE, 100*mapM, 100*mapH);
+		fprintf('>> %s: mP@k[%d %d %d] E: [%.2f %.2f %.2f], M: [%.2f %.2f %.2f], H: [%.2f %.2f %.2f]\n', test_datasets{d}, ks(1), ks(2), ks(3), 100*mprE, 100*mprM, 100*mprH);
+	end
 end
