@@ -53,7 +53,7 @@ We provide the pretrained networks trained using the same parameters as in our E
 
 **Note**: Data and networks used for training and testing are automatically downloaded when using the example scripts.
 
-## Sketch-based image retrieval and deep shape matching (training coming soon, testing available)
+## Sketch-based image retrieval and shape matching (training coming soon, testing available)
 
 This code implements:
 
