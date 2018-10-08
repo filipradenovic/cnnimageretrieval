@@ -22,7 +22,7 @@ test_datasets = {'oxford5k', 'paris6k', 'roxford5k', 'rparis6k'};  % list of dat
 test_imdim = 1024;  % choose test image dimensionality
 use_ms = 1; % use multi-scale representation, otherwise use single-scale
 use_rvec = 0;  % use regional representation (R-MAC, R-GeM), otherwise use global (MAC, GeM)
-use_gpu = [1,1,1,2,2,2,3,3,3,6,6,6,7,7,7,8,8,8];  % use GPUs (array of GPUIDs), if empty use CPU
+use_gpu = [1];  % use GPUs (array of GPUIDs), if empty use CPU
 
 % Choose ECCV16 fine-tuned CNN network
 % network_file = fullfile(data_root, 'networks', 'retrieval-SfM-30k', 'retrievalSfM30k-siamac-alex.mat');
@@ -74,7 +74,7 @@ net = dagnn.DagNN.loadobj(net);
 
 % prepare GPUs if necessary
 numGpus = numel(use_gpu);
-if numGpus, fprintf('>> Prepring GPU(s)...\n'); end
+if numGpus, fprintf('>> Preparing GPU(s)...\n'); end
 if numGpus > 1
 	% check parallel pool integrity as it could have timed out
 	pool = gcp('nocreate');
