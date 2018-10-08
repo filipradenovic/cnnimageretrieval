@@ -32,6 +32,12 @@ switch lower(dataset)
     params.qext = '.jpg';    
     params.dir_data = [dir_main 'rparis6k/'];
     cfg = config_rparis (params);
+
+  case 'flickr15k_sketch'
+    params.ext = '.jpg';
+    params.qext = '.png';
+    params.dir_data= [dir_main 'flickr15k_sketch/'];
+    cfg = config_flickr15k_sketch (params);
     
   otherwise, error ('Unkown dataset %s\n', dataset);
 end
@@ -88,6 +94,18 @@ function cfg = config_rparis (cfg)
   % Load groundtruth
 %----------------------------------------------------
   cfg.gnd_fname = [cfg.dir_data 'gnd_rparis6k.mat'];
+  load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
+  cfg.imlist = imlist;
+  cfg.qimlist = qimlist;  
+  cfg.gnd = gnd;
+  cfg.n = length (cfg.imlist);   % number of database images
+  cfg.nq = length (cfg.qimlist);    % number of query images
+
+%----------------------------------------------------
+function cfg = config_flickr15k_sketch (cfg)
+  % Load groundtruth
+%----------------------------------------------------
+  cfg.gnd_fname = [cfg.dir_data 'gnd_flickr15k_sketch.mat'];
   load (cfg.gnd_fname); % Retrieve list of image names, ground truth and query numbers
   cfg.imlist = imlist;
   cfg.qimlist = qimlist;  
