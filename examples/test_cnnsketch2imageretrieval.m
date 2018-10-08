@@ -19,7 +19,7 @@ test_dataset = 'flickr15k_sketch';  % dataset to evaluate on
 test_imdim = 227;  % choose test image dimensionality
 use_mirror = 1; % use mirror representation, otherwise use only original image
 use_ms = 1; % use multi-scale representation, otherwise use single-scale
-use_gpu = [2,2,2,2,4,4,4,4,7,7]; % use GPUs (array of GPUIDs), if empty use CPU
+use_gpu = [1]; % use GPUs (array of GPUIDs), if empty use CPU
 
 % Choose ECCV18 fine-tuned CNN network
 network_file = fullfile(data_root, 'networks', 'retrieval-SfM-30k', 'retrievalSfM30k-edgemac-vgg.mat');
