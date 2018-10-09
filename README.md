@@ -24,7 +24,7 @@ In order to run this toolbox you will need:
 1. MatConvNet MATLAB toolbox version [1.0-beta25](http://www.vlfeat.org/matconvnet/download/matconvnet-1.0-beta25.tar.gz)
 1. All the rest (data + networks) is automatically downloaded with our scripts
 
-## Image retrieval (training and testing)
+## Image retrieval
 
 This code implements:
 
@@ -53,11 +53,11 @@ We provide the pretrained networks trained using the same parameters as in our E
 
 **Note**: Data and networks used for training and testing are automatically downloaded when using the example scripts.
 
-## Sketch-based image retrieval and shape matching (training coming soon, testing available)
+## Sketch-based image retrieval and shape matching
 
 This code implements:
 
-1. Training (fine-tuning) CNN for sketch-based image retrieval and shape matching (coming soon)
+1. Training (fine-tuning) CNN for sketch-based image retrieval and shape matching
 1. Testing CNN sketch-based image retrieval on Flickr15k dataset
 
 Run the following script in MATLAB:
@@ -65,9 +65,10 @@ Run the following script in MATLAB:
 ```
 >> run [MATCONVNET_ROOT]/matlab/vl_setupnn;
 >> run [CNNIMAGERETRIEVAL_ROOT]/setup_cnnimageretrieval;
+>> train_cnnsketch2imageretrieval;
 >> test_cnnsketch2imageretrieval;
 ```
-See ```[CNNIMAGERETRIEVAL_ROOT]/examples/test_sketch2cnnimageretrieval``` for additional details. 
+See ```[CNNIMAGERETRIEVAL_ROOT]/examples/train_cnnsketch2imageretrieval``` and ```[CNNIMAGERETRIEVAL_ROOT]/examples/test_cnnsketch2imageretrieval``` for additional details. 
 
 We provide the pretrained networks trained using the same parameters as in our ECCV 2018 paper. The Flickr15k dataset used in the paper is slightly outdated compared to the latest one that is automatically downloaded when using this code (0.1 difference in mAP), so we report results here:
 
