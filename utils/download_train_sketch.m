@@ -1,0 +1,55 @@
+function download_train_sketch(data_dir)
+% DOWNLOAD_TRAIN_SKETCH Checks, and, if required, downloads the necessary data and networks for the sketch training.
+%
+%   download_train_sketch(DATA_ROOT) checks if the data and networks necessary for running the sketch training script exist.
+%   If not it downloads it in the folder structure:
+%     DATA_ROOT/train/dbs/         : folder with training database mat files
+%     DATA_ROOT/networks/imagenet/ : CNN models pretrained for classification using imagenet data
+    
+    % Create data folder if it does not exist
+    if ~exist(data_dir, 'dir')
+        mkdir(data_dir);
+    end
+
+    % Create train folder if it does not exist
+    train_dir = fullfile(data_dir, 'train');
+    if ~exist(train_dir, 'dir')
+        mkdir(train_dir);
+    end
+    
+    % Download folder train/db/
+    src_dir = fullfile('http://cmp.felk.cvut.cz/cnnimageretrieval/data', 'train', 'dbs');
+    dst_dir = fullfile(data_dir, 'train', 'dbs');
+    dl_files = {'retrieval-SfM-30k-edgemap.mat'};
+    if ~exist(dst_dir, 'dir')
+        fprintf('>> Database directory does not exist. Creating: %s\n', dst_dir);
+        mkdir(dst_dir);
+        fprintf('>> Downloading database files from cmp.felk.cvut.cz/cnnimageretrieval\n');
+    end
+    for i = 1:numel(dl_files)
+        src_file = fullfile(src_dir, dl_files{i});
+        dst_file = fullfile(dst_dir, dl_files{i});
+        if ~exist(dst_file, 'file')
+            fprintf('>> DB file %s does not exist. Downloading...\n', dl_files{i});
+            system(sprintf('wget %s -O %s', src_file, dst_file)); 
+        end
+    end
+
+    % Download folder networks/imagenet/
+    src_dir = fullfile('http://www.vlfeat.org/matconvnet/', 'models');
+    dst_dir = fullfile(data_dir, 'networks', 'imagenet');
+    dl_files = {'imagenet-caffe-alex.mat', 'imagenet-vgg-verydeep-16.mat', 'imagenet-googlenet-dag.mat', ...
+                'imagenet-resnet-50-dag.mat', 'imagenet-resnet-101-dag.mat', 'imagenet-resnet-152-dag.mat'};
+    if ~exist(dst_dir, 'dir')
+        fprintf('>> Imagenet networks directory does not exist. Creating: %s\n', dst_dir);
+        mkdir(dst_dir);
+        fprintf('>> Downloading imagenet networks from http://www.vlfeat.org/matconvnet\n');
+    end
+    for i = 1:numel(dl_files)
+        src_file = fullfile(src_dir, dl_files{i});
+        dst_file = fullfile(dst_dir, dl_files{i});
+        if ~exist(dst_file, 'file')
+            fprintf('>> Network %s does not exist. Downloading...\n', dl_files{i});
+            system(sprintf('wget %s -O %s', src_file, dst_file)); 
+        end
+    end
