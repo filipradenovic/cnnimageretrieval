@@ -3,11 +3,12 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 %   
 %   NET = append_blocks(NET, METHOD, OBJECTIVE, ERROR, IMCHANNELS)
 %
-%   METHOD is a string:
+%   METHOD is a string that can contain one of the pooling strings:
 %     'mac'   - global max pooling layer
 %     'spoc'  - global average pooling layer
 %     'gem'   - global generalized mean pooling layer with one p for all conv filters
 %     'gemmp' - global generalized mean pooling layer with multiple p for each conv filter
+%	If METHOD contains string 'edgefilter', the network will be pre-pended with the EdgeFilter layer.
 %
 %   OBJECTIVE & ERROR are a cell array with 2 values:
 %     {'contrastiveloss', M} - contrastive loss with margin M
@@ -27,6 +28,37 @@ function net = append_blocks(net, method, objectivetype, errortype, imchs)
 		net.layers(1).block.size(3) = 1;
 	end
 	method = lower(method);
+
+	% Edge filtering layer
+	if strfind(method, 'edgefilter')
+		inputs = {'input'};
+		outputs = {'x0'};
+		params = struct('name', {}, 'value', {}, 'learningRate', [], 'weightDecay', []);
+		name = 'edgelayer';
+		block = EdgeFilter();
+
+		params(1).name  = 'edgelayer_w'; params(1).value = single(10);
+		params(2).name  = 'edgelayer_p'; params(2).value = single(0.5);
+		params(3).name  = 'edgelayer_s'; params(3).value = single(500);
+		params(4).name  = 'edgelayer_t'; params(4).value = single(0.1);
+
+		net.addLayer(name, block, inputs, outputs, {params.name});
+
+		% edgelayer_w params.value
+		i = 1; f = net.getParamIndex(params(i).name);
+		net.params(f).value = params(i).value; net.params(f).learningRate = 0; net.params(f).weightDecay = 0;
+		% edgelayer_p params.value
+		i = 2; f = net.getParamIndex(params(i).name);
+		net.params(f).value = params(i).value; net.params(f).learningRate = 1; net.params(f).weightDecay = 0;
+		% edgelayer_s params.value
+		i = 3; f = net.getParamIndex(params(i).name);
+		net.params(f).value = params(i).value; net.params(f).learningRate = 0; net.params(f).weightDecay = 0;
+		% edgelayer_t params.value
+		i = 4; f = net.getParamIndex(params(i).name);
+		net.params(f).value = params(i).value; net.params(f).learningRate = 0.1; net.params(f).weightDecay = 0;
+		
+		net.layers(1).inputs{1} = outputs{1};
+	end
 
 	l = 0;
 
