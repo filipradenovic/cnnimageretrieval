@@ -70,7 +70,7 @@ else
 end
 
 for epoch=start+1:opts.numEpochs
-
+  
   % Set the random seed based on the epoch and opts.randomSeed.
   % This is important for reproducibility, including when training
   % is restarted from a checkpoint.
@@ -137,7 +137,7 @@ for epoch=start+1:opts.numEpochs
 
   % With multiple GPUs, return one copy
   if isa(net, 'Composite'), net = net{1} ; end
-    
+     
 end
 
 % -------------------------------------------------------------------------

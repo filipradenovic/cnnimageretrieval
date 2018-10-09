@@ -24,7 +24,6 @@ use_gpu = [1]; % use GPUs (array of GPUIDs), if empty use CPU
 % Choose ECCV18 fine-tuned CNN network
 network_file = fullfile(data_root, 'networks', 'retrieval-SfM-30k', 'retrievalSfM30k-edgemac-vgg.mat');
 
-%% COMING SOON
 % After running the training script train_cnnsketch2imageretrieval.m you can evaluate fine-tuned network
 % network_file = fullfile(data_root, 'networks', 'exp', 'vgg_edgefilter_mac_test', 'net-epoch-20');
 
