@@ -116,19 +116,10 @@ function cfg = config_flickr15k_sketch (cfg)
 %----------------------------------------------------
 function fname = config_imname (cfg, i)
 %----------------------------------------------------
-  [~, ~, ext] = fileparts(cfg.imlist{i});
-  if isempty(ext)
-    fname = sprintf ('%s/jpg/%s%s', cfg.dir_data, cfg.imlist{i}, cfg.ext);
-  else
-    fname = sprintf ('%s/jpg/%s', cfg.dir_data, cfg.imlist{i});
-  end
+  fname = sprintf ('%s/jpg/%s%s', cfg.dir_data, cfg.imlist{i}, cfg.ext);
+
 
 %----------------------------------------------------
 function fname = config_qimname (cfg, i)
 %----------------------------------------------------
-  [~, ~, ext] = fileparts(cfg.qimlist{i});
-  if isempty(ext)
-    fname = sprintf ('%s/jpg/%s%s', cfg.dir_data, cfg.qimlist{i}, cfg.qext);
-  else
-    fname = sprintf ('%s/jpg/%s', cfg.dir_data, cfg.qimlist{i});
-  end
+  fname = sprintf ('%s/jpg/%s%s', cfg.dir_data, cfg.qimlist{i}, cfg.qext);
