@@ -51,7 +51,9 @@ We provide the pretrained networks trained using the same parameters as in our E
 | ResNet101-GeM (MatConvNet) | 87.8 | 92.7 | 64.7 | 77.2 | 38.5 | 56.3 |
 | ResNet101-GeM (PyTorch) | 88.2 | 92.5 | 65.3 | 76.6 | 40.0 | 55.2 |
 
-**Note**: Data and networks used for training and testing are automatically downloaded when using the example scripts.
+> **Note**: Data and networks used for training and testing are automatically downloaded when using the example scripts.
+
+> **Note** (June 2022): We updated download files for [Oxford 5k](https://www.robots.ox.ac.uk/~vgg/data/oxbuildings/) and [Paris 6k](https://www.robots.ox.ac.uk/~vgg/data/parisbuildings/) images to use images with blurred faces as suggested by the original dataset owners. Bear in mind, "experiments have shown that one can use the face-blurred version for benchmarking image retrieval with negligible loss of accuracy".
 
 ## Sketch-based image retrieval and shape matching
 
